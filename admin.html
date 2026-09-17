@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Choti Don • Admin 👀</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:
+    radial-gradient(circle at top left,#35182f,transparent 35%),
+    radial-gradient(circle at bottom right,#211a3b,transparent 35%),
+    #09070d;
+    color:white;
+}
+
+.container{
+    width:min(1100px,94%);
+    margin:auto;
+    padding:25px 0 50px;
+}
+
+.card{
+    background:#ffffff09;
+    border:1px solid #ffffff15;
+    border-radius:24px;
+    padding:25px;
+    margin:18px 0;
+    backdrop-filter:blur(15px);
+}
+
+h1{
+    margin:0 0 8px;
+    font-size:38px;
+}
+
+h2{
+    margin-top:0;
+}
+
+.muted{
+    color:#aaa;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    margin:8px 0;
+    border-radius:12px;
+    border:1px solid #ffffff18;
+    background:#ffffff0b;
+    color:white;
+    font-size:15px;
+    outline:none;
+}
+
+button{
+    padding:13px 20px;
+    border:0;
+    border-radius:13px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin:6px 5px 6px 0;
+}
+
+.primary{
+    background:linear-gradient(135deg,#b85c95,#70457e);
+}
+
+.secondary{
+    background:#ffffff0d;
+    border:1px solid #ffffff15;
+}
+
+.danger{
+    background:#71353f;
+}
+
+.status{
+    margin-top:12px;
+    color:#eab0cb;
+    min-height:25px;
+}
+
+.hidden{
+    display:none;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:
+    repeat(3,1fr);
+    gap:12px;
+}
+
+.stat{
+    padding:20px;
+    border-radius:18px;
+    background:#ffffff08;
+    border:1px solid #ffffff10;
+}
+
+.stat-number{
+    font-size:30px;
+    font-weight:bold;
+}
+
+.session{
+    background:#ffffff06;
+    border:1px solid #ffffff10;
+    border-radius:20px;
+    padding:20px;
+    margin:15px 0;
+}
+
+.session-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.event{
+    display:grid;
+    grid-template-columns:170px 180px 1fr;
+    gap:12px;
+    padding:12px;
+    border-bottom:1px solid #ffffff0c;
+    align-items:start;
+}
+
+.event:last-child{
+    border-bottom:0;
+}
+
+.action{
+    display:inline-block;
+    background:#ffffff10;
+    padding:6px 9px;
+    border-radius:20px;
+    font-size:12px;
+}
+
+.details{
+    color:#d8cad7;
+    word-break:break-word;
+}
+
+.time{
+    color:#999;
+    font-size:12px;
+}
+
+.empty{
+    text-align:center;
+    padding:40px;
+    color:#aaa;
+}
+
+@media(max-width:700px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .event{
+        grid-template-columns:1fr;
+        gap:5px;
+    }
+
+    h1{
+        font-size:30px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- HEADER -->
+
+<div class="card">
+
+<h1>
+❤️ Choti Don Admin
+</h1>
+
+<p class="muted">
+Private response dashboard 👀
+</p>
+
+</div>
+
+
+<!-- LOGIN -->
+
+<div
+id="loginCard"
+class="card">
+
+<h2>
+🔐 Admin Login
+</h2>
+
+<p class="muted">
+Sirf Firebase mein banaye admin account se login karo.
+</p>
+
+<input
+id="email"
+type="email"
+placeholder="Admin Email">
+
+<input
+id="password"
+type="password"
+placeholder="Password">
+
+<button
+class="primary"
+onclick="login()">
+
+Login 🔓
+
+</button>
+
+<div
+id="loginStatus"
+class="status">
+</div>
+
+</div>
+
+
+<!-- DASHBOARD -->
+
+<div
+id="dashboard"
+class="hidden">
+
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="muted">
+Sessions
+</div>
+
+<div
+id="sessionCount"
+class="stat-number">
+0
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="muted">
+Total Taps
+</div>
+
+<div
+id="eventCount"
+class="stat-number">
+0
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="muted">
+Latest Action
+</div>
+
+<div
+id="latestAction"
+class="stat-number"
+style="font-size:18px">
+-
+</div>
+
+</div>
+
+</div>
+
+
+<!-- CONTROLS -->
+
+<div class="card">
+
+<h2>
+👀 Activity
+</h2>
+
+<button
+class="primary"
+onclick="loadData()">
+
+🔄 Refresh
+
+</button>
+
+<button
+class="secondary"
+onclick="logout()">
+
+Logout
+
+</button>
+
+<button
+class="danger"
+onclick="clearScreen()">
+
+Hide Data
+
+</button>
+
+<p
+id="refreshStatus"
+class="status">
+</p>
+
+</div>
+
+
+<!-- DATA -->
+
+<div
+id="data">
+
+<div class="empty">
+Login karke data load karo 👀
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+
+import {
+    initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    getDatabase,
+    ref,
+    get
+}
+from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
+
+/* ==========================================
+   FIREBASE CONFIG
+========================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyCTGAtFuTfJ7NOnZeaVVbJ9PL_fKLPfUvs",
+
+    authDomain:
+    "cutie-f6575.firebaseapp.com",
+
+    databaseURL:
+    "https://cutie-f6575-default-rtdb.firebaseio.com",
+
+    projectId:
+    "cutie-f6575",
+
+    storageBucket:
+    "cutie-f6575.firebasestorage.app",
+
+    messagingSenderId:
+    "628249052732",
+
+    appId:
+    "1:628249052732:web:b3dc5ff3241832592e6539"
+
+};
+
+
+/* ==========================================
+   ADMIN UID
+========================================== */
+
+const ADMIN_UID =
+"RI9763exEiNOYtfKN67euBgCSxW2";
+
+
+const app =
+initializeApp(firebaseConfig);
+
+
+const auth =
+getAuth(app);
+
+
+const db =
+getDatabase(app);
+
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+window.login = async function(){
+
+    const email =
+    document
+    .getElementById("email")
+    .value
+    .trim();
+
+
+    const password =
+    document
+    .getElementById("password")
+    .value;
+
+
+    const status =
+    document
+    .getElementById("loginStatus");
+
+
+    if(!email || !password){
+
+        status.innerText =
+        "Email aur password dono bharo.";
+
+        return;
+
+    }
+
+
+    status.innerText =
+    "Login ho raha hai...";
+
+
+    try{
+
+        const result =
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+
+        /* ADMIN UID CHECK */
+
+        if(
+            result.user.uid !==
+            ADMIN_UID
+        ){
+
+            await signOut(auth);
+
+            status.innerText =
+            "❌ Ye account admin nahi hai.";
+
+            return;
+
+        }
+
+
+        status.innerText =
+        "✅ Login successful.";
+
+
+        document
+        .getElementById(
+            "loginCard"
+        )
+        .classList
+        .add("hidden");
+
+
+        document
+        .getElementById(
+            "dashboard"
+        )
+        .classList
+        .remove("hidden");
+
+
+        await loadData();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        status.innerText =
+        "❌ "+error.message;
+
+    }
+
+};
+
+
+/* ==========================================
+   LOAD DATA
+========================================== */
+
+window.loadData = async function(){
+
+    const output =
+    document
+    .getElementById("data");
+
+
+    const status =
+    document
+    .getElementById(
+        "refreshStatus"
+    );
+
+
+    output.innerHTML =
+    '<div class="empty">Loading... 👀</div>';
+
+
+    try{
+
+        const snapshot =
+        await get(
+            ref(
+                db,
+                "sessions"
+            )
+        );
+
+
+        if(!snapshot.exists()){
+
+            output.innerHTML =
+            '<div class="empty">'+
+            'Abhi koi interaction nahi mila 😴'+
+            '</div>';
+
+            updateStats(0,0,"-");
+
+            return;
+
+        }
+
+
+        const sessions =
+        snapshot.val();
+
+
+        let sessionCount = 0;
+
+        let eventCount = 0;
+
+        let latest = "-";
+
+        let latestTimestamp = 0;
+
+
+        output.innerHTML = "";
+
+
+        const sessionEntries =
+        Object.entries(
+            sessions
+        );
+
+
+        sessionEntries
+        .reverse()
+        .forEach(
+            ([uid,session])=>{
+
+                sessionCount++;
+
+
+                const events =
+                session.events ||
+                {};
+
+
+                const eventEntries =
+                Object.entries(
+                    events
+                );
+
+
+                eventCount +=
+                eventEntries.length;
+
+
+                eventEntries
+                .forEach(
+                    ([id,event])=>{
+
+                        if(
+                            event.timestamp &&
+                            event.timestamp >
+                            latestTimestamp
+                        ){
+
+                            latestTimestamp =
+                            event.timestamp;
+
+                            latest =
+                            event.action ||
+                            "-";
+
+                        }
+
+                    }
+                );
+
+
+                eventEntries.sort(
+                    (a,b)=>{
+
+                        return (
+                            (b[1].timestamp||0) -
+                            (a[1].timestamp||0)
+                        );
+
+                    }
+                );
+
+
+                let html =
+
+                '<div class="session">'+
+
+                '<div class="session-title">'+
+
+                '👤 Session: '+
+
+                escapeHTML(
+                    uid.substring(
+                        0,
+                        12
+                    )
+                )+
+
+                '...'+
+
+                '</div>';
+
+
+                if(
+                    eventEntries.length === 0
+                ){
+
+                    html +=
+                    '<div class="muted">'+
+                    'No events'+
+                    '</div>';
+
+                }
+
+
+                eventEntries.forEach(
+                    ([id,event])=>{
+
+                        let time =
+                        "Unknown time";
+
+
+                        if(
+                            event.timestamp
+                        ){
+
+                            time =
+                            new Date(
+                                event.timestamp
+                            )
+                            .toLocaleString();
+
+                        }
+
+
+                        const details =
+                        {...event};
+
+
+                        delete details.action;
+                        delete details.timestamp;
+                        delete details.page;
+
+
+                        let detailText =
+                        JSON.stringify(
+                            details
+                        );
+
+
+                        html +=
+
+                        '<div class="event">'+
+
+                        '<div class="time">'+
+                        escapeHTML(
+                            time
+                        )+
+                        '</div>'+
+
+                        '<div>'+
+
+                        '<span class="action">'+
+                        escapeHTML(
+                            event.action ||
+                            "unknown"
+                        )+
+                        '</span>'+
+
+                        '</div>'+
+
+                        '<div class="details">'+
+
+                        escapeHTML(
+                            detailText
+                        )+
+
+                        '<br>'+
+
+                        '<span class="muted">'+
+                        'Page: '+
+                        escapeHTML(
+                            event.page ||
+                            "-"
+                        )+
+                        '</span>'+
+
+                        '</div>'+
+
+                        '</div>';
+
+                    }
+                );
+
+
+                html +=
+                '</div>';
+
+
+                output.innerHTML +=
+                html;
+
+            }
+        );
+
+
+        updateStats(
+            sessionCount,
+            eventCount,
+            latest
+        );
+
+
+        status.innerText =
+        "Last refreshed: "+
+        new Date()
+        .toLocaleTimeString();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        output.innerHTML =
+
+        '<div class="empty">'+
+
+        '❌ Data load failed<br><br>'+
+
+        escapeHTML(
+            error.message
+        )+
+
+        '</div>';
+
+    }
+
+};
+
+
+/* ==========================================
+   STATS
+========================================== */
+
+function updateStats(
+    sessions,
+    events,
+    latest
+){
+
+    document
+    .getElementById(
+        "sessionCount"
+    )
+    .innerText =
+    sessions;
+
+
+    document
+    .getElementById(
+        "eventCount"
+    )
+    .innerText =
+    events;
+
+
+    document
+    .getElementById(
+        "latestAction"
+    )
+    .innerText =
+    latest;
+
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+window.logout = async function(){
+
+    await signOut(auth);
+
+    location.reload();
+
+};
+
+
+/* ==========================================
+   HIDE DATA
+========================================== */
+
+window.clearScreen = function(){
+
+    document
+    .getElementById(
+        "data"
+    )
+    .innerHTML =
+
+    '<div class="empty">'+
+    'Data hidden. Refresh se wapas dekho 👀'+
+    '</div>';
+
+};
+
+
+/* ==========================================
+   SECURITY: ESCAPE HTML
+========================================== */
+
+function escapeHTML(value){
+
+    return String(value)
+    .replace(
+        /[&<>"']/g,
+
+        char=>({
+
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+
+        })[char]
+
+    );
+
+}
+
+
+</script>
+
+</body>
+</html>

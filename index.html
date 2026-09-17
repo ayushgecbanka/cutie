@@ -583,6 +583,9 @@ html:not(.admin-mode) #adminPanel{display:none !important;}
 .waitingLive span{font-size:15px;color:#cdbfd0;}
 .liveBadge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff18;font-size:13px;}
 .liveDot{width:9px;height:9px;border-radius:50%;background:#ff4f81;box-shadow:0 0 14px #ff4f81;animation:pulse 1s infinite;}
+.liveChoiceBanner{position:relative;z-index:5;display:flex;align-items:center;gap:12px;margin:0 0 12px;padding:13px 16px;border-radius:18px;background:linear-gradient(135deg,#ff4f8122,#b65c9322);border:1px solid #ff8bb833;box-shadow:0 10px 30px #0005;backdrop-filter:blur(10px);font-size:15px;}
+.liveChoiceBanner .choiceIcon{font-size:25px;animation:pulse 1.2s infinite;}
+.liveChoiceBanner small{display:block;margin-top:3px;color:#bfb2c4;font-size:11px;}
 @keyframes pulse{50%{opacity:.35;transform:scale(.75);}}
 @media(max-width:650px){.liveHeader{align-items:flex-start;flex-direction:column}.livePreview{min-height:75vh}.livePreview .screen{min-height:75vh;padding:18px 10px;}}
 
@@ -1516,6 +1519,7 @@ let visitorUID = null;
 let visitorReady = false;
 
 let stopLiveData = null;
+let liveState = {};
 
 
 /* ======================================================
@@ -1627,14 +1631,27 @@ window.track = async function(
 async function updateLiveView(page, action="page_view", details={}){
     if(!visitorReady || !visitorUID) return;
     try{
-        await set(ref(db,"live/current"),{
-            uid:visitorUID,
+        // Keep the visitor's last actual choice visible even after the page changes.
+        const isChoice = action !== "page_view" && action !== "session_start";
+        if(isChoice){
+            liveState.lastChoice = {
+                action: action,
+                details: details,
+                at: Date.now()
+            };
+        }
+
+        liveState = {
+            ...liveState,
+            uid: visitorUID,
             page:"s"+page,
             action:action,
             details:details,
             timestamp:serverTimestamp(),
             online:true
-        });
+        };
+
+        await set(ref(db,"live/current"), liveState);
     }catch(error){
         console.error("Live view error:",error);
     }
@@ -2507,13 +2524,47 @@ function renderLivePreview(data){
     }
 
     preview.innerHTML='';
+
+    // IMPORTANT: this is only a visual clone inside the Admin preview.
+    // It never changes the Admin page's own screen/navigation.
     const clone=source.cloneNode(true);
     clone.classList.add("active");
     clone.removeAttribute("style");
+    clone.querySelectorAll("[onclick]").forEach(el=>el.removeAttribute("onclick"));
     preview.appendChild(clone);
+
+    const choice=data.lastChoice;
+    const choiceText = choice ? formatLiveChoice(choice) : "Abhi tak koi choice record nahi hui.";
+    const banner=document.createElement("div");
+    banner.className="liveChoiceBanner";
+    banner.innerHTML='<span class="choiceIcon">💗</span><div><b>Last choice:</b> '+escapeHTML(choiceText)+'<small>Current screen: '+escapeHTML(data.page)+'</small></div>';
+    preview.insertBefore(banner, preview.firstChild);
 
     const action=data.action ? escapeHTML(data.action) : "live";
     if(status) status.innerHTML='<span class="liveBadge"><span class="liveDot"></span> LIVE · '+action+'</span>';
+}
+
+function formatLiveChoice(choice){
+    const d=choice && choice.details ? choice.details : {};
+    const action=choice && choice.action ? choice.action : "choice";
+    const maps={
+        health_mood:{bad:"😤 Mood kharab hai",very_bad:"🥺 Bahut zyada",okay:"🙂 Thoda better",fine:"😌 Ab theek hoon"},
+        mood:{angry:"😡 Volcano",gussa:"😤 Gussa",okay:"🙂 Thoda okay",happy:"🥰 Almost fine"},
+        fault_answer:{mine:"Haan, tumhari 😤",both:"Dono ki thi 😌",little:"Thodi meri bhi ❤️",complex:"Case complicated 😂"},
+        verdict:{forgive:"❤️ Maaf kiya",punish:"😤 Saza milegi"},
+        punishment:{lecture:"📢 Extra Lecture",sorry:"🥺 10× Sorry",talk:"💬 Baat Karni Padegi",hug:"🫂 Virtual Hug"},
+        distraction:{games:"🎮 Games",music:"🎵 Music",movie:"🎬 Movie",sleep:"😴 Sleep"},
+        special_answer:{yes:"❤️ Haan",no:"🥺 Nahi",maybe:"😶 Maybe"},
+        love_answer:{yes:"❤️ Haan",no:"🥺 Nahi",maybe:"😶 Soch rahi hoon"},
+        last_mood:{little:"🙂 Thoda kam",danger:"😤 Danger zone",smile:"😂 Has rahi hoon",fine:"❤️ Ab theek hai"}
+    };
+    const map=maps[action];
+    if(map){
+        const key=d.answer ?? d.choice ?? d.item ?? d.option;
+        if(key && map[key]) return map[key];
+    }
+    const raw=d.answer ?? d.choice ?? d.item ?? d.option;
+    return raw ? String(raw) : action;
 }
 
 function startLiveView(){

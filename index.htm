@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Choti Don 👻</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Pacifico&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      color: #fff;
+      background: #0d0b12;
+      overflow-x: hidden;
+    }
+
+    /* ---------- BACKGROUND ---------- */
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+
+      background:
+        radial-gradient(
+          circle at 15% 15%,
+          #3b1c35 0%,
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 85% 85%,
+          #211a3b 0%,
+          transparent 35%
+        ),
+        #0d0b12;
+    }
+
+    /* ---------- SCREEN ---------- */
+
+    .screen {
+      min-height: 100vh;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+
+      padding: 25px 16px;
+    }
+
+    .screen.active {
+      display: flex;
+
+      animation: pageIn 0.45s ease;
+    }
+
+    @keyframes pageIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ---------- CARD ---------- */
+
+    .card {
+      width: min(600px, 100%);
+
+      padding: 32px 24px;
+
+      border-radius: 28px;
+
+      background: rgba(255,255,255,0.06);
+
+      border: 1px solid rgba(255,255,255,0.10);
+
+      backdrop-filter: blur(15px);
+
+      box-shadow:
+        0 25px 80px rgba(0,0,0,0.45);
+
+      text-align: center;
+    }
+
+    /* ---------- TEXT ---------- */
+
+    .tag {
+      display: inline-block;
+
+      padding: 7px 13px;
+
+      border-radius: 50px;
+
+      background: rgba(255,255,255,0.08);
+
+      color: #cdb9cb;
+
+      font-size: 11px;
+
+      letter-spacing: 1.4px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 9vw, 60px);
+
+      margin: 18px 0 12px;
+
+      line-height: 1.05;
+    }
+
+    h2 {
+      font-size: clamp(27px, 7vw, 42px);
+
+      margin: 15px 0 12px;
+    }
+
+    .script {
+      font-family: Pacifico, cursive;
+      font-weight: 400;
+    }
+
+    p {
+      color: #cfc5d2;
+
+      line-height: 1.7;
+
+      font-size: 16px;
+    }
+
+    .big {
+      font-size: 18px;
+
+      color: #eee;
+    }
+
+    /* ---------- BUTTONS ---------- */
+
+    .actions {
+      display: flex;
+
+      gap: 12px;
+
+      justify-content: center;
+
+      flex-wrap: wrap;
+
+      margin-top: 25px;
+    }
+
+    button {
+      border: none;
+
+      color: white;
+
+      padding: 13px 20px;
+
+      border-radius: 15px;
+
+      font-family: inherit;
+
+      font-weight: 700;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      background: #9d4d82;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.08);
+
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .danger {
+      background: #5c3549;
+    }
+
+    /* ---------- EMOJI ---------- */
+
+    .emoji {
+      font-size: 58px;
+
+      margin-bottom: 5px;
+    }
+
+    .final {
+      font-size: 75px;
+    }
+
+    /* ---------- BOX ---------- */
+
+    .box {
+      margin-top: 20px;
+
+      padding: 20px;
+
+      border-radius: 20px;
+
+      background: rgba(0,0,0,0.20);
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      text-align: left;
+
+      line-height: 1.8;
+    }
+
+    /* ---------- HEALTH CHECK ---------- */
+
+    .check-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 12px;
+
+      margin-top: 20px;
+    }
+
+    .check-grid button {
+      text-align: left;
+
+      background: rgba(255,255,255,0.07);
+
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .status {
+      min-height: 25px;
+
+      margin-top: 15px;
+
+      color: #f0abc9;
+
+      font-weight: 600;
+    }
+
+    /* ---------- COURT ---------- */
+
+    .court {
+      padding: 20px;
+
+      margin-top: 20px;
+
+      border-radius: 20px;
+
+      background: #17131b;
+
+      border: 1px solid rgba(255,255,255,0.08);
+
+      text-align: left;
+    }
+
+    .court p {
+      margin: 8px 0;
+    }
+
+    .court b {
+      color: #efb0cb;
+    }
+
+    /* ---------- CHOICE ---------- */
+
+    .choice-grid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 12px;
+
+      margin-top: 20px;
+    }
+
+    .choice-grid button {
+      min-height: 70px;
+
+      background: rgba(255,255,255,0.07);
+
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+
+    /* ---------- MOOD ---------- */
+
+    .mood {
+      font-size: 45px;
+
+      margin-top: 18px;
+    }
+
+    .progress {
+      height: 8px;
+
+      margin-top: 15px;
+
+      background: rgba(255,255,255,0.08);
+
+      border-radius: 50px;
+
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0;
+
+      height: 100%;
+
+      background: #b55a91;
+
+      transition: 0.5s;
+    }
+
+    .small {
+      color: #8f8492;
+
+      font-size: 12px;
+
+      margin-top: 18px;
+    }
+
+    /* ---------- NO BUTTON ---------- */
+
+    .no-btn {
+      position: relative;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ---------- MOBILE ---------- */
+
+    @media(max-width: 480px) {
+
+      .card {
+        padding: 27px 17px;
+      }
+
+      .check-grid,
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+
+  <!-- ======================================
+       PAGE 1 : HEALTH
+  ======================================= -->
+
+  <section class="screen active" id="page1">
+
+    <div class="card">
+
+      <div class="emoji">👻</div>
+
+      <span class="tag">
+        IMPORTANT QUESTION
+      </span>
+
+      <h1 class="script">
+        Choti Don
+      </h1>
+
+      <p class="big">
+        Pehle ek cheez ka jawab do...
+      </p>
+
+      <h2>
+        Tabiyat ab kaisi hai?
+      </h2>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="healthBetter()">
+          🙂 Ab theek hai
+        </button>
+
+        <button
+          class="secondary"
+          onclick="healthNotGood()">
+          🥺 Abhi bhi kharab hai
+        </button>
+
+      </div>
+
+      <p class="small">
+        Haan, website banayi hai...
+        lekin pehle health check. 😑
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 2 : HEALTH CHECK
+  ======================================= -->
+
+  <section class="screen" id="page2">
+
+    <div class="card">
+
+      <span class="tag">
+        HEALTH CHECK 😤
+      </span>
+
+      <h2>
+        Pehle ye clear karo.
+      </h2>
+
+      <p>
+        Gussa baad mein kar lena.
+        Abhi bas ye batao:
+      </p>
+
+      <div class="check-grid">
+
+        <button onclick="checkItem(this)">
+          💧 Paani piya?
+        </button>
+
+        <button onclick="checkItem(this)">
+          🍲 Kuch khaya?
+        </button>
+
+        <button onclick="checkItem(this)">
+          💊 Medicine li?
+        </button>
+
+        <button onclick="checkItem(this)">
+          🛌 Rest kiya?
+        </button>
+
+      </div>
+
+      <div
+        class="status"
+        id="healthStatus">
+
+        4 cheezein hain.
+        Bahane allowed nahi. 😑
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="showPage(3)">
+
+          Theek hai,
+          ab aage 😌
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 3 : WHOSE FAULT?
+  ======================================= -->
+
+  <section class="screen" id="page3">
+
+    <div class="card">
+
+      <span class="tag">
+        THODA SA ATTITUDE
+      </span>
+
+      <h2>
+        Ab asli sawaal. 👀
+      </h2>
+
+      <p>
+        Ek honest answer dena...
+      </p>
+
+      <h2>
+        Sirf meri hi galti thi?
+      </h2>
+
+      <div class="actions">
+
+        <button
+          class="danger"
+          onclick="answerFault('yes')">
+
+          Haan 😤
+
+        </button>
+
+        <button
+          class="secondary"
+          onclick="answerFault('no')">
+
+          Nahi 😶
+
+        </button>
+
+      </div>
+
+      <div
+        class="status"
+        id="faultStatus">
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="secondary"
+          id="faultNext"
+          style="display:none"
+          onclick="showPage(4)">
+
+          Chalo maan liya 😌 →
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 4 : COURT
+  ======================================= -->
+
+  <section class="screen" id="page4">
+
+    <div class="card">
+
+      <span class="tag">
+        ⚖️ CHOTI DON'S COURT
+      </span>
+
+      <h2>
+        Case No. 001
+      </h2>
+
+      <div class="court">
+
+        <p>
+          <b>Case:</b>
+          Humari ladai
+        </p>
+
+        <p>
+          <b>Accused:</b>
+          Main 😑
+        </p>
+
+        <p>
+          <b>Judge:</b>
+          Tum 👑
+        </p>
+
+        <p>
+          <b>Evidence:</b>
+          Tumhare paas
+        </p>
+
+        <p>
+          <b>Defence:</b>
+          "Thoda dono ki galti thi..." 😌
+        </p>
+
+      </div>
+
+      <p>
+        Final verdict kya hai?
+      </p>
+
+      <div class="choice-grid">
+
+        <button onclick="verdict('forgive')">
+          ❤️ Maaf kiya
+        </button>
+
+        <button onclick="verdict('punishment')">
+          😤 Saza milegi
+        </button>
+
+      </div>
+
+      <div
+        class="status"
+        id="verdictStatus">
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="secondary"
+          id="courtNext"
+          style="display:none"
+          onclick="showPage(5)">
+
+          Next →
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 5 : REAL TALK
+  ======================================= -->
+
+  <section class="screen" id="page5">
+
+    <div class="card">
+
+      <span class="tag">
+        SERIOUS FOR 30 SECONDS
+      </span>
+
+      <h2>
+        Waise mazaak apni jagah...
+      </h2>
+
+      <p class="big">
+        Mujhe pata hai galti sirf ek taraf se nahi hui.
+      </p>
+
+      <div class="box">
+
+        Jo meri galti thi,
+        <b>uske liye sorry.</b>
+
+        <br><br>
+
+        Aur jo tumhari thi...
+
+        <br>
+
+        <b>
+          uska hisaab baad mein kar lenge. 😤😂
+        </b>
+
+      </div>
+
+      <p>
+        Bas itna chahta hoon ki gussa ho,
+        lecture do, daant do...
+        <b>par baat band mat karo.</b>
+      </p>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="showPage(6)">
+
+          Hmm...
+          aage bolo ❤️
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 6 : MOOD
+  ======================================= -->
+
+  <section class="screen" id="page6">
+
+    <div class="card">
+
+      <span class="tag">
+        ONE LAST TEST
+      </span>
+
+      <h2>
+        Kitna gussa baaki hai? 😶
+      </h2>
+
+      <p>
+        Sach-sach select karna.
+      </p>
+
+      <div class="choice-grid">
+
+        <button onclick="setMood(20,'😡')">
+          Bahut zyada 😤
+        </button>
+
+        <button onclick="setMood(45,'😑')">
+          Kaafi hai
+        </button>
+
+        <button onclick="setMood(70,'🙂')">
+          Thoda sa
+        </button>
+
+        <button onclick="setMood(95,'🥰')">
+          Almost gone
+        </button>
+
+      </div>
+
+      <div
+        class="mood"
+        id="moodEmoji">
+
+        😶
+
+      </div>
+
+      <div class="progress">
+
+        <div
+          class="progress-fill"
+          id="moodFill">
+        </div>
+
+      </div>
+
+      <div
+        class="status"
+        id="moodStatus">
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="secondary"
+          onclick="showPage(7)">
+
+          Final question 👀 →
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 7 : LOVE QUESTION
+  ======================================= -->
+
+  <section class="screen" id="page7">
+
+    <div class="card">
+
+      <span class="tag">
+        FINAL QUESTION ❤️
+      </span>
+
+      <h1>
+        Do you love me?
+      </h1>
+
+      <p id="loveText">
+        Ab isme bhi sochne ka time chahiye kya? 😭
+      </p>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="loveYes()">
+
+          YES ❤️
+
+        </button>
+
+        <button
+          class="secondary no-btn"
+          id="noButton"
+          onclick="loveNo()">
+
+          NO 😤
+
+        </button>
+
+      </div>
+
+      <p class="small">
+        Ek honest answer.
+        Baaki tumhari marzi. ❤️
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 8 : THINK AGAIN
+  ======================================= -->
+
+  <section class="screen" id="page8">
+
+    <div class="card">
+
+      <span class="tag">
+        THINK AGAIN 💭
+      </span>
+
+      <div class="final">
+        🥺
+      </div>
+
+      <h2>
+        Itni jaldi NO?
+      </h2>
+
+      <p>
+        Ek baar aur soch lo.
+      </p>
+
+      <p>
+        Itni saari bakwaas sunne ke baad bhi NO? 😭
+      </p>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="loveYes()">
+
+          Okay... YES ❤️
+
+        </button>
+
+        <button
+          class="secondary no-btn"
+          id="noButton2"
+          onclick="thinkAgain()">
+
+          Still NO 😤
+
+        </button>
+
+      </div>
+
+      <div
+        class="status"
+        id="thinkStatus">
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <!-- ======================================
+       PAGE 9 : END
+  ======================================= -->
+
+  <section class="screen" id="page9">
+
+    <div class="card">
+
+      <div class="final">
+        ❤️
+      </div>
+
+      <h1 class="script">
+        Theek hai.
+      </h1>
+
+      <h2>
+        Ab gussa thoda kam karo.
+      </h2>
+
+      <p>
+        Mujhe koi dramatic answer nahi chahiye.
+      </p>
+
+      <p class="big">
+        Bas jab tabiyat theek ho jaaye...
+        <b>ek baar baat kar lena.</b>
+      </p>
+
+      <div class="box">
+
+        Aur haan...
+
+        <br><br>
+
+        <b>
+          Love you, Choti Don. ❤️
+        </b>
+
+        <br><br>
+
+        Ab zyada hawa mein mat udna. 😤😂
+
+      </div>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          onclick="sendMessage()">
+
+          💬 Baat karte hain
+
+        </button>
+
+      </div>
+
+      <p class="small">
+        No music. No drama.
+        Bas tum. ❤️
+      </p>
+
+    </div>
+
+  </section>
+
+
+
+<script>
+
+/* ======================================
+   BASIC PAGE NAVIGATION
+====================================== */
+
+function showPage(pageNumber) {
+
+  const pages =
+    document.querySelectorAll(".screen");
+
+  pages.forEach(function(page) {
+
+    page.classList.remove("active");
+
+  });
+
+  document
+    .getElementById("page" + pageNumber)
+    .classList.add("active");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+
+/* ======================================
+   HEALTH
+====================================== */
+
+function healthBetter() {
+
+  showPage(2);
+
+  document.getElementById("healthStatus").innerText =
+    "Achha... phir bhi ye 4 cheezein check kar lo. 😑";
+}
+
+
+function healthNotGood() {
+
+  showPage(2);
+
+  document.getElementById("healthStatus").innerText =
+    "Toh pehle health. Gussa baad mein. 🥺";
+}
+
+
+
+/* ======================================
+   HEALTH CHECK BUTTONS
+====================================== */
+
+let checkedItems = 0;
+
+function checkItem(button) {
+
+  if (button.dataset.checked === "true") {
+    return;
+  }
+
+  button.dataset.checked = "true";
+
+  button.style.background = "#5b314a";
+
+  checkedItems++;
+
+  const remaining =
+    4 - checkedItems;
+
+  if (remaining === 0) {
+
+    document.getElementById("healthStatus").innerText =
+      "Good. Ab tum officially daant kha sakti ho. 😌";
+
+  } else {
+
+    document.getElementById("healthStatus").innerText =
+      "Abhi " + remaining +
+      " baaki hai. 😤";
+
+  }
+
+}
+
+
+
+/* ======================================
+   FAULT QUESTION
+====================================== */
+
+function answerFault(answer) {
+
+  const status =
+    document.getElementById("faultStatus");
+
+  const next =
+    document.getElementById("faultNext");
+
+  if (answer === "yes") {
+
+    status.innerText =
+      "Wah. 100%? 😭 Tumhari court mein appeal allowed hai kya?";
+
+  } else {
+
+    status.innerText =
+      "Dekha! Thodi toh sachchai baaki hai. 😌";
+
+  }
+
+  next.style.display = "inline-block";
+}
+
+
+
+/* ======================================
+   COURT VERDICT
+====================================== */
+
+function verdict(type) {
+
+  const status =
+    document.getElementById("verdictStatus");
+
+  const next =
+    document.getElementById("courtNext");
+
+  if (type === "forgive") {
+
+    status.innerText =
+      "Itni jaldi? Suspicious. 👀";
+
+  } else {
+
+    status.innerText =
+      "Theek hai judge sahiba, punishment bata dena. 😭";
+
+  }
+
+  next.style.display = "inline-block";
+}
+
+
+
+/* ======================================
+   MOOD
+====================================== */
+
+function setMood(value, emoji) {
+
+  document.getElementById("moodEmoji").innerText =
+    emoji;
+
+  document.getElementById("moodFill").style.width =
+    value + "%";
+
+  const status =
+    document.getElementById("moodStatus");
+
+  if (value < 40) {
+
+    status.innerText =
+      "Theek hai... abhi zinda bachne ki umeed kam hai. 😭";
+
+  }
+
+  else if (value < 65) {
+
+    status.innerText =
+      "Thoda chance dikh raha hai. 😌";
+
+  }
+
+  else if (value < 85) {
+
+    status.innerText =
+      "Bas thoda aur... 🙂";
+
+  }
+
+  else {
+
+    status.innerText =
+      "Achha! Ab baat ban sakti hai. ❤️";
+
+  }
+
+}
+
+
+
+/* ======================================
+   LOVE QUESTION
+====================================== */
+
+let noCount = 0;
+
+function loveNo() {
+
+  noCount++;
+
+  const button =
+    document.getElementById("noButton");
+
+  const text =
+    document.getElementById("loveText");
+
+
+  if (noCount === 1) {
+
+    text.innerText =
+      "Really? Ek baar aur soch lo. 👀";
+
+    button.innerText =
+      "NO, REALLY 😤";
+
+  }
+
+
+  else if (noCount === 2) {
+
+    text.innerText =
+      "Itni jaldi decision mat lo. 😭";
+
+    button.innerText =
+      "STILL NO";
+
+    button.style.transform =
+      "translateX(38px)";
+
+  }
+
+
+  else if (noCount === 3) {
+
+    text.innerText =
+      "Last chance... phir main chup. 🥺";
+
+    button.innerText =
+      "NO";
+
+    button.style.transform =
+      "translate(55px, -25px)";
+
+  }
+
+
+  else {
+
+    showPage(8);
+
+  }
+
+}
+
+
+
+/* ======================================
+   THINK AGAIN PAGE
+====================================== */
+
+let thinkCount = 0;
+
+function thinkAgain() {
+
+  thinkCount++;
+
+  const button =
+    document.getElementById("noButton2");
+
+  const status =
+    document.getElementById("thinkStatus");
+
+
+  if (thinkCount === 1) {
+
+    status.innerText =
+      "Okay... but ek baar genuinely soch lo. 🥺";
+
+    button.style.transform =
+      "translateX(35px)";
+
+  }
+
+
+  else if (thinkCount === 2) {
+
+    status.innerText =
+      "Bas bas 😭";
+
+    button.style.transform =
+      "translate(55px, -25px)";
+
+  }
+
+
+  else {
+
+    button.style.display =
+      "none";
+
+    status.innerText =
+      "Theek hai. Tumhari marzi. ❤️";
+
+    setTimeout(function() {
+
+      showPage(9);
+
+    }, 1000);
+
+  }
+
+}
+
+
+
+/* ======================================
+   YES
+====================================== */
+
+function loveYes() {
+
+  showPage(9);
+
+}
+
+
+
+/* ======================================
+   WHATSAPP
+====================================== */
+
+function sendMessage() {
+
+  const message =
+    "Website dekh li 😭❤️ Ab baat karte hain.";
+
+  const url =
+    "https://wa.me/?text=" +
+    encodeURIComponent(message);
+
+  window.open(url, "_blank");
+
+}
+
+</script>
+
+</body>
+</html>

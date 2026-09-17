@@ -570,6 +570,22 @@ th,td{
 html.admin-mode #publicSite{display:none !important;}
 html.admin-mode #adminPanel{display:block !important;}
 html:not(.admin-mode) #adminPanel{display:none !important;}
+
+/* ================= LIVE ADMIN VIEW ================= */
+.liveHeader{display:flex;align-items:center;justify-content:space-between;gap:18px;}
+.liveViewerCard{padding:18px;overflow:hidden;}
+.livePreview{position:relative;min-height:70vh;border-radius:26px;overflow:hidden;background:#0b0710;border:1px solid #ffffff18;}
+.livePreview .screen{display:flex!important;min-height:70vh;padding:25px 15px;animation:enter .45s ease;}
+.livePreview .screen:not(.active){display:none!important;}
+.livePreview .actions button,.livePreview button,.livePreview input,.livePreview a{pointer-events:none;}
+.livePreview .screen{cursor:default;}
+.waitingLive{text-align:center;padding:120px 25px;color:#fff;font-size:28px;line-height:1.6;}
+.waitingLive span{font-size:15px;color:#cdbfd0;}
+.liveBadge{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;background:#ffffff10;border:1px solid #ffffff18;font-size:13px;}
+.liveDot{width:9px;height:9px;border-radius:50%;background:#ff4f81;box-shadow:0 0 14px #ff4f81;animation:pulse 1s infinite;}
+@keyframes pulse{50%{opacity:.35;transform:scale(.75);}}
+@media(max-width:650px){.liveHeader{align-items:flex-start;flex-direction:column}.livePreview{min-height:75vh}.livePreview .screen{min-height:75vh;padding:18px 10px;}}
+
 </style>
 <script>
 (function(){
@@ -1385,80 +1401,36 @@ Agar nahi aayi... toh developer ko dubara bula lena. 😭<br><br>
 <div class="adminWrap">
 
 <div class="adminCard">
-
-<h1 style="font-size:38px">
-❤️ Choti Don Dashboard
-</h1>
-
-<p>
-Firebase activity dashboard
-</p>
-
+<h1 style="font-size:38px">❤️ Choti Don — Live View</h1>
+<p>Yahan visitor ko jo page abhi dikh raha hai, wahi live dikhega. 👀</p>
 </div>
-
 
 <div id="loginBox" class="adminCard">
-
 <h2>Admin Login 🔐</h2>
-
-<input
-id="email"
-type="email"
-placeholder="Admin email">
-
-<input
-id="password"
-type="password"
-placeholder="Password">
-
-<button
-class="primary"
-onclick="adminLogin()">
-
-Login
-
-</button>
-
+<input id="email" type="email" placeholder="Admin email">
+<input id="password" type="password" placeholder="Password">
+<button class="primary" onclick="adminLogin()">Login</button>
 <div id="loginStatus" class="status"></div>
-
 </div>
-
 
 <div id="dashboard" class="hidden">
-
-<div class="adminCard">
-
-<h2>
-Latest interactions 👀
-</h2>
-<p class="small">🔴 LIVE — new activity automatically dikhegi</p>
-
-<button
-class="primary"
-onclick="loadData()">
-
-Refresh
-
-</button>
-
-<button
-class="secondary"
-onclick="logout()">
-
-Logout
-
-</button>
-
+<div class="adminCard liveHeader">
+<div>
+<h2>👀 Visitor Live Screen</h2>
+<p id="liveStatus" class="small">Connecting to live view...</p>
+</div>
+<button class="secondary" onclick="logout()">Logout</button>
 </div>
 
-<div id="data"></div>
-
+<div class="adminCard liveViewerCard">
+<div id="livePreview" class="livePreview">
+<div class="waitingLive">💗<br><b>Waiting for Choti Don...</b><br><span>Jab visitor site use karega, uska current screen yahan live dikhega.</span></div>
+</div>
+</div>
 </div>
 
 </div>
-
 </div>
-
 
 <!-- ======================================================
      FIREBASE
@@ -1619,25 +1591,20 @@ window.track = async function(
         );
 
 
+        const currentPage = document.querySelector(".screen.active")?.id || "";
+
         await set(
             event,
             {
-
                 action:action,
-
                 ...details,
-
-                page:
-                document
-                .querySelector(
-                    ".screen.active"
-                )?.id || "",
-
-                timestamp:
-                serverTimestamp()
-
+                page:currentPage,
+                timestamp:serverTimestamp()
             }
         );
+
+        const livePage = currentPage.replace("s","") || "1";
+        await updateLiveView(livePage, action, details);
 
     }
 
@@ -1656,6 +1623,22 @@ window.track = async function(
 /* ======================================================
    PAGE NAVIGATION
 ====================================================== */
+
+async function updateLiveView(page, action="page_view", details={}){
+    if(!visitorReady || !visitorUID) return;
+    try{
+        await set(ref(db,"live/current"),{
+            uid:visitorUID,
+            page:"s"+page,
+            action:action,
+            details:details,
+            timestamp:serverTimestamp(),
+            online:true
+        });
+    }catch(error){
+        console.error("Live view error:",error);
+    }
+}
 
 window.next = function(page){
 
@@ -1695,6 +1678,7 @@ window.next = function(page){
         }
     );
 
+    updateLiveView(page,"page_view",{page:page});
 
     makeParticles();
 
@@ -2502,105 +2486,56 @@ window.adminLogin = async function(){
 
 
 /* ======================================================
-   LOAD ADMIN DATA
+   ADMIN LIVE VIEW
 ====================================================== */
 
-function renderSessions(snapshot){
+function renderLivePreview(data){
+    const preview=document.getElementById("livePreview");
+    const status=document.getElementById("liveStatus");
+    if(!preview) return;
 
-    const output = document.getElementById("data");
-
-    if(!output) return;
-
-    if(!snapshot.exists()){
-        output.innerHTML =
-        '<div class="adminCard">Abhi koi response nahi aaya. 😴</div>';
+    if(!data || !data.page){
+        preview.innerHTML='<div class="waitingLive">💗<br><b>Waiting for Choti Don...</b><br><span>Visitor ke site par aate hi current screen yahan dikhega.</span></div>';
+        if(status) status.innerHTML='<span class="liveBadge"><span class="liveDot"></span> Waiting</span>';
         return;
     }
 
-    const sessions = snapshot.val();
-
-    output.innerHTML = "";
-
-    Object.entries(sessions)
-    .reverse()
-    .forEach(([uid,session])=>{
-
-        const events = session.events || {};
-
-        const rows = Object.values(events).reverse();
-
-        let html =
-        '<div class="adminCard">'+
-        '<h2>Session '+
-        escapeHTML(uid.substring(0,12))+ '...</h2>'+
-        '<div class="tableWrap">'+
-        '<table><thead><tr>'+
-        '<th>Time</th><th>Action</th><th>Details</th><th>Page</th>'+
-        '</tr></thead><tbody>';
-
-        rows.forEach(event=>{
-
-            let time = "Unknown";
-
-            if(event.timestamp){
-                time = new Date(event.timestamp).toLocaleString();
-            }
-
-            const details = {...event};
-            delete details.action;
-            delete details.page;
-            delete details.timestamp;
-
-            html +=
-            '<tr>'+
-            '<td>'+escapeHTML(time)+'</td>'+
-            '<td><span class="pill">'+escapeHTML(event.action || "")+'</span></td>'+
-            '<td>'+escapeHTML(JSON.stringify(details))+'</td>'+
-            '<td>'+escapeHTML(event.page || "")+'</td>'+
-            '</tr>';
-        });
-
-        html += '</tbody></table></div></div>';
-        output.innerHTML += html;
-    });
-}
-
-function startLiveData(){
-
-    if(stopLiveData){
-        stopLiveData();
-        stopLiveData = null;
+    const source=document.getElementById(data.page);
+    if(!source){
+        preview.innerHTML='<div class="waitingLive">Screen '+escapeHTML(data.page)+' nahi mila.</div>';
+        return;
     }
 
-    const sessionsRef = ref(db,"sessions");
+    preview.innerHTML='';
+    const clone=source.cloneNode(true);
+    clone.classList.add("active");
+    clone.removeAttribute("style");
+    preview.appendChild(clone);
 
-    stopLiveData = onValue(
-        sessionsRef,
-        snapshot=>{
-            renderSessions(snapshot);
-        },
+    const action=data.action ? escapeHTML(data.action) : "live";
+    if(status) status.innerHTML='<span class="liveBadge"><span class="liveDot"></span> LIVE · '+action+'</span>';
+}
+
+function startLiveView(){
+    if(stopLiveData){
+        stopLiveData();
+        stopLiveData=null;
+    }
+
+    const liveRef=ref(db,"live/current");
+
+    stopLiveData=onValue(
+        liveRef,
+        snapshot=>renderLivePreview(snapshot.exists()?snapshot.val():null),
         error=>{
-            const output = document.getElementById("data");
-            if(output){
-                output.innerHTML =
-                '<div class="adminCard"><b>Error:</b><br>'+
-                escapeHTML(error.message)+
-                '</div>';
-            }
+            const status=document.getElementById("liveStatus");
+            if(status) status.innerText="Live view error: "+error.message;
         }
     );
 }
 
-window.loadData = async function(){
-
-    const output = document.getElementById("data");
-
-    if(output){
-        output.innerHTML =
-        '<div class="adminCard">Live data connect ho raha hai... 👀</div>';
-    }
-
-    startLiveData();
+window.loadData=function(){
+    startLiveView();
 };
 
 /* ======================================================

@@ -323,6 +323,174 @@ button:hover{
     }
 }
 
+
+/* ======================================================
+   CHOTI DON DELUXE ANIMATIONS
+====================================================== */
+body::before{
+    content:"";
+    position:fixed;
+    inset:-30%;
+    pointer-events:none;
+    background:
+      radial-gradient(circle at 25% 35%,#ff6fb040 0 2px,transparent 3px),
+      radial-gradient(circle at 75% 65%,#b56cff35 0 2px,transparent 3px);
+    background-size:170px 170px,220px 220px;
+    animation:starsFloat 18s linear infinite;
+    z-index:-1;
+}
+
+.card{
+    position:relative;
+    overflow:hidden;
+    animation:cardFloat 5s ease-in-out infinite;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    inset:-2px;
+    border-radius:32px;
+    padding:1px;
+    background:linear-gradient(120deg,transparent,#ff9ed455,transparent,#a875ff44,transparent);
+    background-size:250% 250%;
+    animation:borderGlow 6s linear infinite;
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+}
+
+button,.option{
+    position:relative;
+    overflow:hidden;
+}
+
+button::after,.option::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-120%;
+    width:70%;
+    height:100%;
+    background:linear-gradient(90deg,transparent,#ffffff22,transparent);
+    transform:skewX(-20deg);
+    transition:left .55s ease;
+}
+button:hover::after,.option:hover::after{left:140%;}
+
+.emoji.pulse{filter:drop-shadow(0 0 18px #ff79b955);}
+
+.hug{
+    filter:drop-shadow(0 15px 30px #ff6fa522);
+}
+
+.hug::before,.hug::after{
+    content:"❤";
+    position:absolute;
+    font-size:22px;
+    opacity:0;
+    animation:heartOrbit 2.8s ease-in-out infinite;
+}
+.hug::before{left:25%;top:20%;animation-delay:.2s;}
+.hug::after{right:25%;top:12%;animation-delay:1.2s;}
+
+.hug .person{transition:filter .3s;}
+.hug:hover .person{filter:brightness(1.12);}
+
+.hugDeluxe{
+    width:240px;
+    height:240px;
+    margin:18px auto;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hugCircle{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    background:radial-gradient(circle,#ff9ec833,#b967a522 55%,transparent 70%);
+    animation:hugGlow 1.8s ease-in-out infinite;
+}
+
+.hugEmoji{
+    position:absolute;
+    font-size:82px;
+    animation:deluxeHug 1.8s ease-in-out infinite;
+    filter:drop-shadow(0 10px 22px #0008);
+}
+
+.floatingHearts span{
+    position:absolute;
+    font-size:20px;
+    animation:floatHeart 3.2s ease-in-out infinite;
+}
+.floatingHearts span:nth-child(1){left:18%;top:45%;animation-delay:0s}
+.floatingHearts span:nth-child(2){right:15%;top:30%;animation-delay:.7s}
+.floatingHearts span:nth-child(3){left:35%;top:8%;animation-delay:1.4s}
+.floatingHearts span:nth-child(4){right:30%;bottom:12%;animation-delay:2s}
+
+.memoryGrid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-top:22px;
+}
+.memory{
+    padding:20px 12px;
+    border-radius:22px;
+    background:#ffffff09;
+    border:1px solid #ffffff13;
+    transition:.25s;
+}
+.memory:hover{transform:translateY(-5px) rotate(-1deg);background:#ffffff12;}
+
+.letter{
+    text-align:left;
+    padding:24px;
+    border-radius:24px;
+    background:linear-gradient(145deg,#fffafc10,#ffffff05);
+    border:1px solid #ffffff15;
+    line-height:1.9;
+    box-shadow:inset 0 1px #ffffff12;
+}
+
+.typeLine{
+    display:inline-block;
+    overflow:hidden;
+    border-right:2px solid #f3a8cb;
+    white-space:nowrap;
+    animation:typing 3s steps(28,end),blink .7s step-end infinite alternate;
+    max-width:100%;
+}
+
+.sparkle{
+    animation:sparkle 1.6s ease-in-out infinite;
+}
+
+@keyframes starsFloat{to{transform:translate3d(60px,-80px,0)}}
+@keyframes cardFloat{50%{transform:translateY(-3px)}}
+@keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes heartOrbit{0%,100%{transform:translateY(8px) scale(.7);opacity:0}40%{opacity:1}70%{transform:translateY(-28px) scale(1.15);opacity:.9}}
+@keyframes hugGlow{50%{transform:scale(1.12);opacity:.75}}
+@keyframes deluxeHug{0%,100%{transform:scale(1) rotate(-3deg)}50%{transform:scale(1.12) rotate(3deg)}}
+@keyframes floatHeart{0%,100%{transform:translateY(15px) scale(.8);opacity:.35}50%{transform:translateY(-22px) scale(1.15);opacity:1}}
+@keyframes sparkle{50%{transform:scale(1.16) rotate(5deg);filter:drop-shadow(0 0 15px #ffb1d6)}}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{50%{border-color:transparent}}
+
+@media(max-width:560px){
+    .memoryGrid{grid-template-columns:1fr 1fr;}
+    .hugEmoji{font-size:68px;}
+}
+
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;}
+}
+
 /* ADMIN */
 
 #adminPanel{
@@ -398,7 +566,17 @@ th,td{
         width:100%;
     }
 }
+
+html.admin-mode #publicSite{display:none !important;}
+html.admin-mode #adminPanel{display:block !important;}
+html:not(.admin-mode) #adminPanel{display:none !important;}
 </style>
+<script>
+(function(){
+  const isAdmin = new URLSearchParams(location.search).get("admin") === "1";
+  document.documentElement.classList.toggle("admin-mode", isAdmin);
+})();
+</script>
 </head>
 
 
@@ -465,47 +643,7 @@ Tumhari choice save ho sakti hai taaki sender ko pata chale tumne kya choose kiy
 
 <!-- PAGE 2 -->
 
-<section class="screen" id="s2">
 
-<div class="card">
-
-<span class="tag">CARE MODE ON</span>
-
-<div class="emoji">🫠</div>
-
-<h2>Pehle tabiyat...</h2>
-
-<p>
-Gussa apni jagah, health pehle. 😑
-</p>
-
-<div class="grid">
-
-<button onclick="healthCheck('water')">
-💧 Paani piya?
-</button>
-
-<button onclick="healthCheck('food')">
-🍲 Kuch khaya?
-</button>
-
-<button onclick="healthCheck('medicine')">
-💊 Medicine li?
-</button>
-
-<button onclick="healthCheck('rest')">
-🛌 Rest kiya?
-</button>
-
-</div>
-
-<div id="healthStatus" class="status">
-Ek-ek karke batao madam. 😤
-</div>
-
-</div>
-
-</section>
 
 
 <!-- PAGE 3 -->
@@ -763,36 +901,29 @@ Menu se select karo, judge sahiba.
 
 <span class="tag">VIRTUAL HUG 🫂</span>
 
-<h2>Achha... idhar aao. 😌</h2>
+<h2>Achha... idhar aao. 😌❤️</h2>
 
-<div class="hug">
-
-<div class="person person1">
-🥺
+<div class="hugDeluxe">
+  <div class="hugCircle"></div>
+  <div class="hugEmoji">🫂</div>
+  <div class="floatingHearts">
+    <span>💗</span><span>💖</span><span>💕</span><span>❤️</span>
+  </div>
 </div>
 
-<div class="person person2">
-👻
+<h3 class="sparkle">Hug delivered... properly. 🫂❤️</h3>
+
+<p>Ek virtual hug free mein. Baaki hugs milenge toh real life mein. 😭</p>
+
+<div class="box">
+<strong>Hug level: MAXIMUM 🫂</strong><br>
+Gussa 2 minute ke liye officially banned. 😤➡️🥺➡️😌
 </div>
-
-<div class="arms"></div>
-
-</div>
-
-<h3>
-Hug delivered. 🫂❤️
-</h3>
-
-<p>
-2 minute ke liye gussa side mein rakh do.
-</p>
 
 <div class="actions">
-
-<button class="primary" onclick="next(9)">
-Okay 😌
+<button class="primary" onclick="track('hug_reaction',{reaction:'accepted'});next(9)">
+Okay, hug accepted 😌
 </button>
-
 </div>
 
 </div>
@@ -1149,14 +1280,97 @@ Ab zyada hawa mein mat udna. 😤😂
 
 <div class="actions">
 
-<button class="primary" onclick="whatsapp()">
-💬 Baat karte hain
+<button class="primary" onclick="next(17)">
+✨ Ek last surprise
 </button>
 
 </div>
 
 </div>
 
+</section>
+
+</div>
+
+
+<!-- PAGE 17 -->
+<section class="screen" id="s17">
+<div class="card">
+<span class="tag">ONE LAST THING ✨</span>
+<div class="emoji sparkle">🥹</div>
+<h2>Itna sab dekh liya...</h2>
+<p class="big">Ab bina drama ke ek chhoti si baat maanogi?</p>
+<div class="memoryGrid">
+  <div class="memory">😂<br><b>Thoda hasna</b><br><span class="small">daily compulsory</span></div>
+  <div class="memory">🫂<br><b>Ek hug</b><br><span class="small">jab mood ho</span></div>
+  <div class="memory">💬<br><b>Baat karna</b><br><span class="small">ignore nahi</span></div>
+  <div class="memory">❤️<br><b>Apna khayal</b><br><span class="small">sabse pehle</span></div>
+</div>
+<div class="actions">
+<button class="primary" onclick="track('surprise_choice',{choice:'yes'});next(18)">Haan, bolo 🥺</button>
+</div>
+</div>
+</section>
+
+<!-- PAGE 18 -->
+<section class="screen" id="s18">
+<div class="card">
+<span class="tag">HUG LEVEL 2.0 🫂</span>
+<h2>Emergency Hug Station</h2>
+<div class="hugDeluxe">
+  <div class="hugCircle"></div>
+  <div class="hugEmoji">🤗</div>
+  <div class="floatingHearts"><span>💗</span><span>💞</span><span>💓</span><span>❤️</span></div>
+</div>
+<p class="big">Agar abhi bhi thoda gussa hai, toh ye hug save kar lo. 🥺</p>
+<div class="box">
+🫂 <b>10-second virtual hug</b><br><br>
+Saans lo... relax karo... aur thoda smile kar do. 😌
+</div>
+<div class="actions">
+<button class="primary" onclick="track('hug_reaction',{reaction:'level2'});next(19)">Hug mil gaya ❤️</button>
+</div>
+</div>
+</section>
+
+<!-- PAGE 19 -->
+<section class="screen" id="s19">
+<div class="card">
+<span class="tag">SMALL PROMISE 🤝</span>
+<div class="emoji">🌷</div>
+<h2>Ek chhota sa promise?</h2>
+<p class="big">Gussa ho sakta hai. Narazgi bhi. Bas khud ko ignore mat karna. ❤️</p>
+<div class="letter">
+<b>Deal?</b><br><br>
+Jab mood off ho toh thoda rest, paani, food aur peace. 🌸<br>
+Aur jab mann kare... bas ek message. 💬<br><br>
+No pressure. No drama. Bas thoda sa care. 🫶
+</div>
+<div class="actions">
+<button class="primary" onclick="track('promise',{accepted:true});next(20)">Deal 🤝❤️</button>
+</div>
+</div>
+</section>
+
+<!-- PAGE 20 -->
+<section class="screen" id="s20">
+<div class="card">
+<span class="tag">FOR CHOTI DON ❤️</span>
+<div class="emoji pulse">💌</div>
+<h1>Bas ek last message.</h1>
+<p class="typeLine">You are special. Please don't forget that. ❤️</p>
+<div class="letter">
+Choti Don,<br><br>
+Aaj ka mission simple tha — gussa thoda kam karna aur tumhe ek chhoti si smile dena. 🥺❤️<br><br>
+Agar smile aa gayi toh website successful. 😂<br>
+Agar nahi aayi... toh developer ko dubara bula lena. 😭<br><br>
+<b>Take care of yourself. And whenever you're ready, baat kar lena. 🫂</b>
+</div>
+<div class="actions">
+<button class="primary" onclick="whatsapp()">💬 Ab WhatsApp par baat</button>
+</div>
+<p class="small">Made with too much effort & too many emojis. 👻❤️</p>
+</div>
 </section>
 
 </div>
@@ -1217,6 +1431,7 @@ Login
 <h2>
 Latest interactions 👀
 </h2>
+<p class="small">🔴 LIVE — new activity automatically dikhegi</p>
 
 <button
 class="primary"
@@ -1243,20 +1458,6 @@ Logout
 </div>
 
 </div>
-
-
-<!-- ADMIN MODE GUARD -->
-<script>
-(function(){
-    const isAdmin = new URLSearchParams(location.search).get("admin") === "1";
-    if(isAdmin){
-        const publicSite = document.getElementById("publicSite");
-        const adminPanel = document.getElementById("adminPanel");
-        if(publicSite) publicSite.style.display = "none";
-        if(adminPanel) adminPanel.style.display = "block";
-    }
-})();
-</script>
 
 
 <!-- ======================================================
@@ -1288,6 +1489,7 @@ import {
     push,
     set,
     get,
+    onValue,
     serverTimestamp
 }
 from
@@ -1340,6 +1542,8 @@ const ADMIN_UID =
 let visitorUID = null;
 
 let visitorReady = false;
+
+let stopLiveData = null;
 
 
 /* ======================================================
@@ -1511,7 +1715,7 @@ window.health = function(answer){
     );
 
 
-    next(2);
+    next(3);
 
 
     const status =
@@ -1538,50 +1742,6 @@ window.health = function(answer){
 
         status.innerText =
         "Achha... phir bhi checklist complete karo. 😌";
-
-    }
-
-};
-
-
-/* ======================================================
-   HEALTH CHECK
-====================================================== */
-
-let healthAnswers = 0;
-
-window.healthCheck = function(item){
-
-    healthAnswers++;
-
-    track(
-        "health_check",
-        {
-            item:item
-        }
-    );
-
-
-    const status =
-    document.getElementById(
-        "healthStatus"
-    );
-
-
-    status.innerText =
-    "Okay... "+healthAnswers+
-    "/4 noted. 👀";
-
-
-    if(healthAnswers>=4){
-
-        status.innerText =
-        "Good. Ab thoda gussa kar sakti ho. 😌";
-
-        setTimeout(
-            ()=>next(3),
-            800
-        );
 
     }
 
@@ -2345,211 +2505,114 @@ window.adminLogin = async function(){
    LOAD ADMIN DATA
 ====================================================== */
 
+function renderSessions(snapshot){
+
+    const output = document.getElementById("data");
+
+    if(!output) return;
+
+    if(!snapshot.exists()){
+        output.innerHTML =
+        '<div class="adminCard">Abhi koi response nahi aaya. 😴</div>';
+        return;
+    }
+
+    const sessions = snapshot.val();
+
+    output.innerHTML = "";
+
+    Object.entries(sessions)
+    .reverse()
+    .forEach(([uid,session])=>{
+
+        const events = session.events || {};
+
+        const rows = Object.values(events).reverse();
+
+        let html =
+        '<div class="adminCard">'+
+        '<h2>Session '+
+        escapeHTML(uid.substring(0,12))+ '...</h2>'+
+        '<div class="tableWrap">'+
+        '<table><thead><tr>'+
+        '<th>Time</th><th>Action</th><th>Details</th><th>Page</th>'+
+        '</tr></thead><tbody>';
+
+        rows.forEach(event=>{
+
+            let time = "Unknown";
+
+            if(event.timestamp){
+                time = new Date(event.timestamp).toLocaleString();
+            }
+
+            const details = {...event};
+            delete details.action;
+            delete details.page;
+            delete details.timestamp;
+
+            html +=
+            '<tr>'+
+            '<td>'+escapeHTML(time)+'</td>'+
+            '<td><span class="pill">'+escapeHTML(event.action || "")+'</span></td>'+
+            '<td>'+escapeHTML(JSON.stringify(details))+'</td>'+
+            '<td>'+escapeHTML(event.page || "")+'</td>'+
+            '</tr>';
+        });
+
+        html += '</tbody></table></div></div>';
+        output.innerHTML += html;
+    });
+}
+
+function startLiveData(){
+
+    if(stopLiveData){
+        stopLiveData();
+        stopLiveData = null;
+    }
+
+    const sessionsRef = ref(db,"sessions");
+
+    stopLiveData = onValue(
+        sessionsRef,
+        snapshot=>{
+            renderSessions(snapshot);
+        },
+        error=>{
+            const output = document.getElementById("data");
+            if(output){
+                output.innerHTML =
+                '<div class="adminCard"><b>Error:</b><br>'+
+                escapeHTML(error.message)+
+                '</div>';
+            }
+        }
+    );
+}
+
 window.loadData = async function(){
 
-    const output =
-    document.getElementById(
-        "data"
-    );
+    const output = document.getElementById("data");
 
-
-    output.innerHTML =
-    '<div class="adminCard">Loading... 👀</div>';
-
-
-    try{
-
-        const snapshot =
-        await get(
-            ref(
-                db,
-                "sessions"
-            )
-        );
-
-
-        if(!snapshot.exists()){
-
-            output.innerHTML =
-            '<div class="adminCard">Abhi koi response nahi aaya. 😴</div>';
-
-            return;
-
-        }
-
-
-        const sessions =
-        snapshot.val();
-
-
+    if(output){
         output.innerHTML =
-        "";
-
-
-        Object.entries(
-            sessions
-        )
-        .reverse()
-        .forEach(
-            ([uid,session])=>{
-
-                const events =
-                session.events ||
-                {};
-
-
-                const rows =
-                Object.values(
-                    events
-                )
-                .reverse();
-
-
-                let html =
-
-                '<div class="adminCard">'+
-
-                '<h2>Session '+
-                escapeHTML(
-                    uid.substring(
-                        0,
-                        12
-                    )
-                )+
-                '...</h2>'+
-
-                '<div class="tableWrap">'+
-
-                '<table>'+
-
-                '<thead>'+
-
-                '<tr>'+
-
-                '<th>Time</th>'+
-
-                '<th>Action</th>'+
-
-                '<th>Details</th>'+
-
-                '<th>Page</th>'+
-
-                '</tr>'+
-
-                '</thead>'+
-
-                '<tbody>';
-
-
-                rows.forEach(
-                    event=>{
-
-                        let time =
-                        "Unknown";
-
-
-                        if(
-                            event.timestamp
-                        ){
-
-                            time =
-                            new Date(
-                                event.timestamp
-                            )
-                            .toLocaleString();
-
-                        }
-
-
-                        const details =
-                        {...event};
-
-
-                        delete details.action;
-                        delete details.page;
-                        delete details.timestamp;
-
-
-                        html +=
-
-                        '<tr>'+
-
-                        '<td>'+
-                        escapeHTML(time)+
-                        '</td>'+
-
-                        '<td>'+
-
-                        '<span class="pill">'+
-                        escapeHTML(
-                            event.action ||
-                            ""
-                        )+
-                        '</span>'+
-
-                        '</td>'+
-
-                        '<td>'+
-                        escapeHTML(
-                            JSON.stringify(
-                                details
-                            )
-                        )+
-                        '</td>'+
-
-                        '<td>'+
-                        escapeHTML(
-                            event.page ||
-                            ""
-                        )+
-                        '</td>'+
-
-                        '</tr>';
-
-                    }
-                );
-
-
-                html +=
-
-                '</tbody>'+
-                '</table>'+
-                '</div>'+
-                '</div>';
-
-
-                output.innerHTML +=
-                html;
-
-            }
-        );
-
+        '<div class="adminCard">Live data connect ho raha hai... 👀</div>';
     }
 
-    catch(error){
-
-        output.innerHTML =
-
-        '<div class="adminCard">'+
-
-        '<b>Error:</b><br>'+
-
-        escapeHTML(
-            error.message
-        )+
-
-        '</div>';
-
-    }
-
+    startLiveData();
 };
-
 
 /* ======================================================
    LOGOUT
 ====================================================== */
 
 window.logout = async function(){
+
+    if(stopLiveData){
+        stopLiveData();
+        stopLiveData = null;
+    }
 
     await signOut(auth);
 
